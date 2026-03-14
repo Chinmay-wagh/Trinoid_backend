@@ -41,6 +41,10 @@ transporter.verify((error, success) => {
 });
 
 // Routes
+app.get('/', (req, res) => {
+    res.send('Trinoid Solutions Backend API is running.');
+});
+
 app.post('/api/send-otp', async (req, res) => {
     const { email, otp } = req.body;
 
