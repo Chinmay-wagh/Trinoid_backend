@@ -7,7 +7,12 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 10000;
+
+console.log('--- System Startup ---');
+console.log('PORT:', PORT);
+console.log('EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'MISSING');
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'MISSING');
 
 // Middleware
 const corsOptions = {
