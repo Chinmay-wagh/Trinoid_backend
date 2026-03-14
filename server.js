@@ -28,21 +28,24 @@ const upload = multer({ storage: storage }).fields([
     { name: 'photoIdBack', maxCount: 1 }
 ]);
 
-// Transporter configuration - Using 'service: gmail' for automatic port selection
+// Transporter configuration - IPv4 forced for reliability
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // Use SSL/TLS
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    family: 4 // Force IPv4 (Fixes ETIMEDOUT on Render/Cloud)
 });
 
 // Verify SMTP connection
 transporter.verify((error) => {
     if (error) {
-        console.error('SMTP Connection Error:', error.message);
+        console.error('❌ SMTP Connection Error:', error.message);
     } else {
-        console.log('✅ SMTP Server logic is ready');
+        console.log('✅ SMTP Server is ready across all networks');
     }
 });
 
