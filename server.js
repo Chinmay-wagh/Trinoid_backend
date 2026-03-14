@@ -28,30 +28,21 @@ const upload = multer({ storage: storage }).fields([
     { name: 'photoIdBack', maxCount: 1 }
 ]);
 
-// Transporter configuration (Robust for Render/Cloud environments)
+// Transporter configuration - Using 'service: gmail' for automatic port selection
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // Use STARTTLS
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // Must be a 16-digit App Password
-    },
-    tls: {
-        rejectUnauthorized: false // Helps avoid local/cloud cert issues
+        pass: process.env.EMAIL_PASS
     }
 });
 
-// Verify transporter connection on startup
-transporter.verify((error, success) => {
+// Verify SMTP connection
+transporter.verify((error) => {
     if (error) {
-        console.error('Nodemailer Connection Error details:', {
-            message: error.message,
-            code: error.code,
-            command: error.command
-        });
+        console.error('SMTP Connection Error:', error.message);
     } else {
-        console.log('✅ SMTP Server logic is ready to send emails');
+        console.log('✅ SMTP Server logic is ready');
     }
 });
 
