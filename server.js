@@ -28,21 +28,30 @@ const upload = multer({ storage: storage }).fields([
     { name: 'photoIdBack', maxCount: 1 }
 ]);
 
-// Transporter configuration
+// Transporter configuration (Robust for Render/Cloud environments)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // Use STARTTLS
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: process.env.EMAIL_PASS // Must be a 16-digit App Password
+    },
+    tls: {
+        rejectUnauthorized: false // Helps avoid local/cloud cert issues
     }
 });
 
-// Verify transporter
+// Verify transporter connection on startup
 transporter.verify((error, success) => {
     if (error) {
-        console.log('Transporter error:', error);
+        console.error('Nodemailer Connection Error details:', {
+            message: error.message,
+            code: error.code,
+            command: error.command
+        });
     } else {
-        console.log('Server is ready to take messages');
+        console.log('✅ SMTP Server logic is ready to send emails');
     }
 });
 
